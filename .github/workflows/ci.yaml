@@ -7,31 +7,27 @@ on:
             - develop
 
 jobs:
-    test:
-        name: testes (Go ${{ matrix.go }})
+    check-application:
+        name: check-application (Go ${{ matrix.go }})
         runs-on: ubuntu-latest
 
         strategy:
             fail-fast: false
             matrix:
-                go: ["1.14", "1.23"]
+                go: ["1.22.2", "1.23.x"]
 
         steps:
-            - uses: actions/checkout@v4
+            - name: Checkout
+              uses: actions/checkout@v4
 
-            - uses: actions/setup-go@v5
+            - name: Setup Go
+              uses: actions/setup-go@v5
               with:
                   go-version: ${{ matrix.go }}
+                  cache: true
+
+            - name: Show Go version
+              run: go version
 
             - name: Run tests
               run: go test ./...
-
-    check-application:
-        name: check-application
-        needs: test
-        if: ${{ always() }}
-        runs-on: ubuntu-latest
-
-        steps:
-            - name: Confirm matrix tests passed
-              run: test "${{ needs.test.result }}" = "success"
