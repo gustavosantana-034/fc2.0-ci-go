@@ -2,6 +2,7 @@ name: ci-golang-workflow
 
 on:
     push:
+    pull_request:
 
 jobs:
     check-application:
@@ -12,7 +13,7 @@ jobs:
 
             - uses: actions/setup-go@v5
               with:
-                  go-version: "1.22"
+                  go-version: "1.23"
 
             - name: Run tests
               run: go test ./...
